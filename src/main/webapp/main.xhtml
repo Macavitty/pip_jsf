@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jstl="http://java.sun.com/jsp/jstl/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:define name="title">iad_checker</ui:define>
+
+<h:body>
+
+    <ui:composition template="/template/layout.xhtml">
+        <ui:define name="content">
+
+            <h:link value="start page" outcome="index" style="float: left; margin-left: 10%;" > </h:link>
+
+            <div id="container">
+
+                <div id="form_area" class="block">
+                    <h:form id="main_form" name="main_form">
+                        <fieldset class="param_field">
+                            <legend>Х</legend>
+                            <p:message for="x_input"/>
+                            <p:spinner min="-3" max="3" value="0" stepFactor="1" id="x_input">
+                                <!--required="true"
+                                requiredMessage="Введите значение от -3 до 3 (шаг 1)"
+                                validator="XValidator" -->
+                            </p:spinner>
+                        </fieldset>
+                        <fieldset class="param_field">
+                            <legend>Y</legend>
+                            <p>
+                                <p:message for="y_input"/>
+                                <h:inputText id="y_input" name="y_input"
+                                             a:placeholder="Y є (-3; 3)"
+                                             autocomplete="off"
+                                             a:maxlength="16" required="true"
+                                             requiredMessage="Поле Y не должно быть пустым"
+                                             validatorMessage="Введите число в промежутке (-3; 3)">
+                                    <f:converter converterId="javax.faces.Double"/>
+                                    <f:validateDoubleRange minimum="-3" maximum="3"/>
+                                </h:inputText>
+                            </p>
+                        </fieldset>
+                        <fieldset class="param_field">
+                            <legend >R</legend>
+                            <p:message for="r_input"/>
+                            <p:spinner id="r_input" min="0.1" max="3" value="3" stepFactor="0.1"
+                                       required="true"
+                                       requiredMessage="Введите значение от 0.1 до 3 (шаг 0.1)"
+                            onchange="redraw();" oninput="return redraw()">
+                            </p:spinner>
+                        </fieldset>
+                        <h:commandButton id="sendButton" action="#{check.check}" value="ВЖУХ"/>
+
+                    </h:form>
+
+
+                </div>
+
+
+                <div id="canvas_area">
+                    <canvas id="canvas" width="600px" height="600px">
+                        Sorry, canvas not supported
+                    </canvas>
+                    <h:outputScript library="js" name="plot.js" />
+                </div>
+
+                <div id="table_area">
+                    <table id="res_table">
+                        <thead>
+                        <tr>
+                            <th>X</th>
+                            <th>Y</th>
+                            <th>R</th>
+                            <th class="bool_result">Попадание в область</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </ui:define>
+    </ui:composition>
+
+</h:body>
+
+</html>
+
+        <!--
+        import javax.faces.application.FacesMessage;
+        import javax.faces.component.UIComponent;
+        import javax.faces.context.FacesContext;
+        import javax.faces.validator.FacesValidator;
+        import javax.faces.validator.Validator;
+        import javax.faces.validator.ValidatorException;
+
+        @FacesValidator("YValidator")
+        public class YValidator implements Validator{
+
+        private static final double min = -3;
+        private static final double max = 3;
+
+        @Override
+        public void validate(FacesContext ctx, UIComponent component, Object o) throws ValidatorException {
+        double value = Double.parseDouble(o.toString().replace(',', '.'));
+        FacesMessage msg = new FacesMessage(value + " не принадлежит промежутку (-3; 3), а должен бы");
+        if (value <= min || value >= max) throw new ValidatorException(msg);
+        }
+        }
+        -->
